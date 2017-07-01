@@ -1,5 +1,6 @@
 package cadovvl.cadovvl.cadovvl.gd;
 
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -47,5 +48,16 @@ public class CompanyPoster extends AppCompatActivity {
                 }
             }
         });
+
+
+        View cameraView = findViewById(R.id.shot);
+        cameraView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(getApplicationContext(), CameraActivity.class);
+                startActivity(intent);
+            }
+        });
+
     }
 }

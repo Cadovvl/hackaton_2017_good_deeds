@@ -29,19 +29,10 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
 
-        View cameraView = findViewById(R.id.shot);
 
         Intent intent = new Intent(this, CompanyPoster.class);
 
         startActivityForResult(intent, 123);
-
-        cameraView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(getApplicationContext(), CameraActivity.class);
-                startActivity(intent);
-            }
-        });
 
 
         initMap();
