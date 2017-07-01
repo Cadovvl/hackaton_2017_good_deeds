@@ -45,11 +45,10 @@ public class MainActivity extends AppCompatActivity {
         mOverlayManager = mMapController.getOverlayManager();
 
         mapView.showBuiltInScreenButtons(true);
-        // add listener
-        //mMapController.getOverlayManager().getMyLocation().addMyLocationListener(this);
 
-        initNewPointOverlay();
         initCampaignsOverlay();
+        initNewPointOverlay();
+
     }
 
     private void initNewPointOverlay() {
