@@ -1,9 +1,12 @@
 package cadovvl.cadovvl.cadovvl.gd;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.TextView;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -15,6 +18,8 @@ import cadovvl.cadovvl.cadovvl.gd.mapthings.NewPointOverlay;
 import ru.yandex.yandexmapkit.MapController;
 import ru.yandex.yandexmapkit.MapView;
 import ru.yandex.yandexmapkit.OverlayManager;
+
+import ru.yandex.yandexmapkit.MapView;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -43,42 +48,12 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        View posterView = findViewById(R.id.poster);
         View cameraView = findViewById(R.id.shot);
 
+        Intent intent = new Intent(this, CompanyPoster.class);
 
-        posterView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                try {
-                    final TextView textView = (TextView) findViewById(R.id.OutputText);
+        startActivityForResult(intent, 123);
 
-                    Deed obj = new Deed()
-                            .setName("test name")
-                            .setPos(new Pos()
-                                    .setLon(0.3)
-                                    .setLat(13.54));
-
-                    ResultConsumer consumer = new ResultConsumer() {
-                        @Override
-                        public void consume(final String res) {
-                            runOnUiThread(
-                                    new Runnable() {
-                                        @Override
-                                        public void run() {
-                                            textView.setText(res);
-                                        }
-                                    }
-                            );
-                        }
-                    };
-
-                    storageClient.post(obj, consumer);
-                } catch (Exception e) {
-                    processException(e);
-                }
-            }
-        });
         cameraView.setOnClickListener((new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -108,5 +83,10 @@ public class MainActivity extends AppCompatActivity {
     private void loadPointsOverlay() {
         mNewPointLayer = new NewPointOverlay(this, mMapController);
         mOverlayManager.addOverlay(mNewPointLayer);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
     }
 }

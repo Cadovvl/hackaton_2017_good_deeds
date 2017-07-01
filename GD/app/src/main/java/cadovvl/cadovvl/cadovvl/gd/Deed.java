@@ -3,7 +3,6 @@ package cadovvl.cadovvl.cadovvl.gd;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonValue;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class Deed {
@@ -17,7 +16,7 @@ public class Deed {
     private final static String ID_KEY = "id";
     private final static String NAME_KEY = "name";
     private final static String DESCRIPTION_KEY = "description";
-    private final static String CREATE_TS_KEY = "create_ts";
+    private final static String CREATED_TS_KEY = "created_ts";
     private final static String LAST_MODIFY_TS_KEY = "last_modify_ts";
     private final static String STATUS_KEY = "status";
     private final static String POS_KEY = "pos";
@@ -35,7 +34,7 @@ public class Deed {
     @JsonProperty(DESCRIPTION_KEY)
     private String descrition;
 
-    @JsonProperty(CREATE_TS_KEY)
+    @JsonProperty(CREATED_TS_KEY)
     private Long createTs;
 
     @JsonProperty(LAST_MODIFY_TS_KEY)
@@ -56,7 +55,7 @@ public class Deed {
     public Deed(@JsonProperty(ID_KEY) String id,
                 @JsonProperty(NAME_KEY) String name,
                 @JsonProperty(DESCRIPTION_KEY) String descrition,
-                @JsonProperty(CREATE_TS_KEY) Long createTs,
+                @JsonProperty(CREATED_TS_KEY) Long createdTs,
                 @JsonProperty(LAST_MODIFY_TS_KEY) Long lastModifyTs,
                 @JsonProperty(STATUS_KEY) Status status,
                 @JsonProperty(POS_KEY) Pos pos,
@@ -65,7 +64,7 @@ public class Deed {
         this.id = id;
         this.name = name;
         this.descrition = descrition;
-        this.createTs = createTs != null ? createTs: System.currentTimeMillis();
+        this.createTs = createdTs != null ? createdTs: System.currentTimeMillis();
         this.lastModifyTs = lastModifyTs != null ? lastModifyTs: System.currentTimeMillis();
         this.status = status;
         this.pos = pos;
