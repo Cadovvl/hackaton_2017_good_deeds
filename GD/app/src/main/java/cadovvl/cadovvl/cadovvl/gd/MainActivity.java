@@ -82,7 +82,8 @@ public class MainActivity extends AppCompatActivity {
                     public void consume(Deeds deeds) {
                         for (final Deed d: deeds.values()) {
                             builder.setColor(EventOverlayItem.Color.Blue)
-                                    .setLocation( new GeoPoint(d.getPos().getLat(), d.getPos().getLon()) );
+                                    .setLocation( new GeoPoint(d.getPos().getLat(), d.getPos().getLon()) )
+                            .setText(String.format("STATUS: %s", d.getStatus() != null ? d.getStatus().name() : ""));
                             overlay.addOverlayItem(builder.build(MainActivity.this));
 
                         }
