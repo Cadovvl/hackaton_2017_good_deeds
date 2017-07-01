@@ -4,12 +4,8 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
-import android.view.View;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-
-import java.io.PrintWriter;
-import java.io.StringWriter;
 
 import cadovvl.cadovvl.cadovvl.gd.mapthings.EventOverlayItem;
 import cadovvl.cadovvl.cadovvl.gd.mapthings.NewPointOverlay;
@@ -17,6 +13,7 @@ import ru.yandex.yandexmapkit.MapController;
 import ru.yandex.yandexmapkit.MapView;
 import ru.yandex.yandexmapkit.OverlayManager;
 import ru.yandex.yandexmapkit.overlay.Overlay;
+import ru.yandex.yandexmapkit.utils.GeoPoint;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -52,7 +49,7 @@ public class MainActivity extends AppCompatActivity {
         //mMapController.getOverlayManager().getMyLocation().addMyLocationListener(this);
 
         initNewPointOverlay();
-        loadCampaignsOverlay();
+        initCampaignsOverlay();
     }
 
     private void initNewPointOverlay() {
@@ -60,16 +57,42 @@ public class MainActivity extends AppCompatActivity {
         mOverlayManager.addOverlay(mNewPointLayer);
     }
 
-    private void loadCampaignsOverlay() {
+    private void initCampaignsOverlay() {
         mCampaignsLayer = new Overlay(mMapController);
         mOverlayManager.addOverlay(mCampaignsLayer);
-        try {
-            EventOverlayItem.placeItemsTest(mCampaignsLayer, this);
-        } catch (Exception e) {
-            Log.d("TAG", e.getLocalizedMessage());
-        }
     }
-    
+
+    @Override
+    protected void onResume() {
+        loadCampaignsOverlay(mCampaignsLayer);
+        super.onResume();
+    }
+
+    private void loadCampaignsOverlay(final Overlay overlay) {
+        overlay.clearOverlayItems();
+
+        final EventOverlayItem.Builder builder = new EventOverlayItem.Builder();
+        StorageClient client = new StorageClientImpl();
+        client.find(new SearchParams()
+                        .setLat(56.00)
+                        .setLon(44.00)
+                        .setR(5000000.0)
+                ,
+                new DeedsConsumer() {
+                    @Override
+                    public void consume(Deeds deeds) {
+                        for (final Deed d: deeds.values()) {
+                            builder.setColor(EventOverlayItem.Color.Blue)
+                                    .setLocation( new GeoPoint(d.getPos().getLat(), d.getPos().getLon()) );
+                            overlay.addOverlayItem(builder.build(MainActivity.this));
+
+                        }
+                    }
+                }
+        );
+
+    }
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);

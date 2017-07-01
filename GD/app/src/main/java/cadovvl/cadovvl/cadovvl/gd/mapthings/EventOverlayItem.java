@@ -104,29 +104,4 @@ public class EventOverlayItem extends OverlayItem {
             }
         }
     }
-
-    //TODO: Delete this test
-    public static void placeItemsTest(final Overlay overlay, final Context context) {
-        final Builder builder = new Builder();
-            StorageClient client = new StorageClientImpl();
-        client.find(new SearchParams()
-                .setLat(56.00)
-                .setLon(44.00)
-                .setR(5000000.0)
-                ,
-                new DeedsConsumer() {
-                    @Override
-                    public void consume(Deeds deeds) {
-                        for (final Deed d: deeds.values()) {
-                            builder.setColor(Color.Blue).setLocation(
-                                    new GeoPoint(d.getPos().getLat(), d.getPos().getLon()));
-                            overlay.addOverlayItem(builder.build(context));
-
-                        }
-                    }
-                }
-        );
-    }
-
-
 }
