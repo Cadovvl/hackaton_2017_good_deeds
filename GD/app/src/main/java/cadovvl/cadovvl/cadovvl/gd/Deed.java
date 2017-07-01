@@ -27,7 +27,7 @@ public class Deed {
 
 
     @JsonProperty(ID_KEY)
-    private Long id;
+    private String id;
 
     @JsonProperty(NAME_KEY)
     private String name;
@@ -53,7 +53,7 @@ public class Deed {
     @JsonProperty(PHOTO_AFTER_KEY)
     private String photoAfter;
 
-    public Deed(@JsonProperty(ID_KEY) long id,
+    public Deed(@JsonProperty(ID_KEY) String id,
                 @JsonProperty(NAME_KEY) String name,
                 @JsonProperty(DESCRIPTION_KEY) String descrition,
                 @JsonProperty(CREATE_TS_KEY) Long createTs,
@@ -77,7 +77,7 @@ public class Deed {
 
     }
 
-    public Deed setId(long id) {
+    public Deed setId(String id) {
         this.id = id;
         return this;
     }
@@ -122,7 +122,7 @@ public class Deed {
         return this;
     }
 
-    public Long getId() {
+    public String getId() {
         return id;
     }
 

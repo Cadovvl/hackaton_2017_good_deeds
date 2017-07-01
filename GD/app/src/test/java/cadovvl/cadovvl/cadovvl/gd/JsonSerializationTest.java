@@ -23,10 +23,10 @@ public class JsonSerializationTest {
     @Test
     public void testDeedSerialization() throws Exception {
         assertEquals("{\"name\":\"asd\"}", mapper.writeValueAsString(new Deed().setName("asd")));
-        assertEquals("{\"id\":1234,\"name\":\"asd\"}",
+        assertEquals("{\"id\":\"1234\",\"name\":\"asd\"}",
                 mapper.writeValueAsString(new Deed()
                 .setName("asd")
-                .setId(1234L)));
+                .setId("1234")));
     }
 
 
