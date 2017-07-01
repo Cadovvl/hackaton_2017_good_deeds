@@ -25,5 +25,14 @@
         android:text="Ping"
         tools:layout_editor_absoluteX="142dp"
         tools:layout_editor_absoluteY="305dp" />
+    <Button
+        android:id="@+id/shot"
+        style="@style/Widget.AppCompat.Button"
+        android:layout_width="125dp"
+        android:layout_height="75dp"
+        android:elevation="1dp"
+        android:text="Camera"
+        tools:layout_editor_absoluteX="142dp"
+        tools:layout_editor_absoluteY="380dp" />
 
 </android.support.constraint.ConstraintLayout>

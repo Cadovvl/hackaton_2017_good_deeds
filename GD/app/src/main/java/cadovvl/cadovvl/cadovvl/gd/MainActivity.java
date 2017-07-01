@@ -1,5 +1,6 @@
 package cadovvl.cadovvl.cadovvl.gd;
 
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -13,6 +14,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         View buttonView = findViewById(R.id.button);
+        View cameraView = findViewById(R.id.shot);
 
         buttonView.setOnClickListener(new View.OnClickListener(){
             int i = 0;
@@ -23,6 +25,13 @@ public class MainActivity extends AppCompatActivity {
                 textView.setText("Pressed: " + i);
             }
         });
+        cameraView.setOnClickListener((new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent cameraIntent = new Intent(view.getContext(), CameraActivity.class);
+                startActivity(cameraIntent);
+            }
+        }));
 
     }
 }
