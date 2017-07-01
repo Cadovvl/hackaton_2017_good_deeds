@@ -1,25 +1,16 @@
 package cadovvl.cadovvl.cadovvl.gd;
 
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
-import android.view.Window;
-import android.view.WindowManager;
-import android.widget.TextView;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-
-import java.io.PrintWriter;
-import java.io.StringWriter;
 
 import cadovvl.cadovvl.cadovvl.gd.mapthings.NewPointOverlay;
 import ru.yandex.yandexmapkit.MapController;
 import ru.yandex.yandexmapkit.MapView;
 import ru.yandex.yandexmapkit.OverlayManager;
-
-import ru.yandex.yandexmapkit.MapView;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -37,19 +28,21 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+
         View cameraView = findViewById(R.id.shot);
 
         Intent intent = new Intent(this, CompanyPoster.class);
 
         startActivityForResult(intent, 123);
 
-        cameraView.setOnClickListener((new View.OnClickListener() {
+        cameraView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent cameraIntent = new Intent(view.getContext(), CameraActivity.class);
-                startActivity(cameraIntent);
+                Intent intent = new Intent(getApplicationContext(), CameraActivity.class);
+                startActivity(intent);
             }
-        }));
+        });
+
 
         initMap();
 

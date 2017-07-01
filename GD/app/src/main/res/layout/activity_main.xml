@@ -8,9 +8,9 @@
 
     <Button
         android:id="@+id/shot"
-        style="@style/Widget.AppCompat.Button"
+        style="@style/Widget.AppCompat.Button.Borderless.Colored"
         android:layout_width="92dp"
-        android:layout_height="33dp"
+        android:layout_height="48dp"
         android:elevation="1dp"
         android:text="Camera"
         tools:layout_editor_absoluteX="276dp"
