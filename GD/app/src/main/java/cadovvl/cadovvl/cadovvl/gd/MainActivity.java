@@ -11,10 +11,21 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 
+import cadovvl.cadovvl.cadovvl.gd.mapthings.NewPointOverlay;
+import ru.yandex.yandexmapkit.MapController;
+import ru.yandex.yandexmapkit.MapView;
+import ru.yandex.yandexmapkit.OverlayManager;
+
 public class MainActivity extends AppCompatActivity {
 
     private final static StorageClient storageClient = new StorageClientImpl();
     private final static ObjectMapper mapper = new ObjectMapper();
+
+    private MapController mMapController;
+    private OverlayManager mOverlayManager;
+    private MapView mMap;
+    private NewPointOverlay mNewPointLayer;
+    private static final int PERMISSIONS_CODE = 1;
 
 
     private void processException(Exception e) {
@@ -76,5 +87,26 @@ public class MainActivity extends AppCompatActivity {
             }
         }));
 
+        initMap();
+
+    }
+
+    private void initMap() {
+        final MapView mapView = (MapView) findViewById(R.id.map);
+
+        mMap = mapView;
+        mMapController = mMap.getMapController();
+        mOverlayManager = mMapController.getOverlayManager();
+
+        mapView.showBuiltInScreenButtons(true);
+        // add listener
+        //mMapController.getOverlayManager().getMyLocation().addMyLocationListener(this);
+
+        loadPointsOverlay();
+    }
+
+    private void loadPointsOverlay() {
+        mNewPointLayer = new NewPointOverlay(this, mMapController);
+        mOverlayManager.addOverlay(mNewPointLayer);
     }
 }
