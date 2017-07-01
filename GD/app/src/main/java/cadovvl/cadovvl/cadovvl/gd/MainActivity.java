@@ -3,14 +3,20 @@ package cadovvl.cadovvl.cadovvl.gd;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import java.io.PrintWriter;
+import java.io.StringWriter;
+
+import cadovvl.cadovvl.cadovvl.gd.mapthings.EventOverlayItem;
 import cadovvl.cadovvl.cadovvl.gd.mapthings.NewPointOverlay;
 import ru.yandex.yandexmapkit.MapController;
 import ru.yandex.yandexmapkit.MapView;
 import ru.yandex.yandexmapkit.OverlayManager;
+import ru.yandex.yandexmapkit.overlay.Overlay;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -21,6 +27,7 @@ public class MainActivity extends AppCompatActivity {
     private OverlayManager mOverlayManager;
     private MapView mMap;
     private NewPointOverlay mNewPointLayer;
+    private Overlay mCampaignsLayer;
     private static final int PERMISSIONS_CODE = 1;
 
     @Override
@@ -50,14 +57,24 @@ public class MainActivity extends AppCompatActivity {
         // add listener
         //mMapController.getOverlayManager().getMyLocation().addMyLocationListener(this);
 
-        loadPointsOverlay();
+        initNewPointOverlay();
+        loadCampaignsOverlay();
     }
 
-    private void loadPointsOverlay() {
+    private void initNewPointOverlay() {
         mNewPointLayer = new NewPointOverlay(this, mMapController);
         mOverlayManager.addOverlay(mNewPointLayer);
     }
 
+    private void loadCampaignsOverlay() {
+        mCampaignsLayer = new Overlay(mMapController);
+        try {
+            EventOverlayItem.placeItemsTest(mCampaignsLayer, this);
+        } catch (Exception e) {
+            Log.d("TAG", e.getLocalizedMessage());
+        }
+    }
+    
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
