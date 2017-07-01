@@ -31,7 +31,7 @@ public class NewPointOverlay extends Overlay /*implements GeoCodeListener*/
     public boolean onSingleTapUp( float x, float y )
     {
         GeoPoint point = getMapController().getGeoPoint( new ScreenPoint(x, y));
-        final String message = String.format("Let's create a good deed at [lat=%f and lon %f]", point.getLat(), point.getLat());
+        final String message = String.format("Let's create a good deed at [lat=%f and lon %f]", point.getLat(), point.getLon());
         mContext.runOnUiThread(new Runnable() {
             @Override
             public void run() {
