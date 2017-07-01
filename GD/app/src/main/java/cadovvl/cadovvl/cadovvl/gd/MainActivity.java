@@ -1,5 +1,6 @@
 package cadovvl.cadovvl.cadovvl.gd;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
@@ -9,7 +10,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;
-import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -33,7 +33,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         View posterView = findViewById(R.id.poster);
-
+        View cameraView = findViewById(R.id.shot);
 
 
         posterView.setOnClickListener(new View.OnClickListener() {
@@ -68,6 +68,13 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         });
+        cameraView.setOnClickListener((new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent cameraIntent = new Intent(view.getContext(), CameraActivity.class);
+                startActivity(cameraIntent);
+            }
+        }));
 
     }
 }
