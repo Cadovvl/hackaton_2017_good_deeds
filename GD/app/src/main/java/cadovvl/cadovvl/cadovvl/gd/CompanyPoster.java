@@ -18,6 +18,11 @@ public class CompanyPoster extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_company_poster);
 
+        final String lat = getIntent().getExtras().getString("lat");
+        final String lon = getIntent().getExtras().getString("lon");
+        ((EditText) findViewById(R.id.latField)).setText(lat);
+        ((EditText) findViewById(R.id.lonField)).setText(lon);
+
         View button = findViewById(R.id.newCompanySender);
 
         final CompanyPoster poster = this;

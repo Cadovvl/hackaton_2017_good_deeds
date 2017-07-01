@@ -8,15 +8,15 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 public class Deed {
 
     public enum Status {
-        CREATED,
-        DONE,
-        CLOSED
+        created,
+        done,
+        closed
     }
 
     private final static String ID_KEY = "id";
     private final static String NAME_KEY = "name";
     private final static String DESCRIPTION_KEY = "description";
-    private final static String CREATED_TS_KEY = "created_ts";
+    private final static String CREATED_TS_KEY = "created_at";
     private final static String LAST_MODIFY_TS_KEY = "last_modify_ts";
     private final static String STATUS_KEY = "status";
     private final static String POS_KEY = "pos";

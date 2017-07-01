@@ -11,9 +11,14 @@ import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.view.View;
 
+import java.util.List;
+
 import cadovvl.cadovvl.cadovvl.gd.Deed;
 import cadovvl.cadovvl.cadovvl.gd.DeedConsumer;
+import cadovvl.cadovvl.cadovvl.gd.Deeds;
+import cadovvl.cadovvl.cadovvl.gd.DeedsConsumer;
 import cadovvl.cadovvl.cadovvl.gd.R;
+import cadovvl.cadovvl.cadovvl.gd.SearchParams;
 import cadovvl.cadovvl.cadovvl.gd.StorageClient;
 import cadovvl.cadovvl.cadovvl.gd.StorageClientImpl;
 import ru.yandex.yandexmapkit.overlay.Overlay;
@@ -104,15 +109,23 @@ public class EventOverlayItem extends OverlayItem {
     public static void placeItemsTest(final Overlay overlay, final Context context) {
         final Builder builder = new Builder();
             StorageClient client = new StorageClientImpl();
-        client.get(-1, new DeedConsumer() {
-            @Override
-            public void consume(Deed deed) {
-                builder.setColor(Color.Blue).setLocation(
+        client.find(new SearchParams()
+                .setLat(56.00)
+                .setLon(44.00)
+                .setR(5000000.0)
+                ,
+                new DeedsConsumer() {
+                    @Override
+                    public void consume(Deeds deeds) {
+                        for (final Deed d: deeds.values()) {
+                            builder.setColor(Color.Blue).setLocation(
+                                    new GeoPoint(d.getPos().getLat(), d.getPos().getLon()));
+                            overlay.addOverlayItem(builder.build(context));
 
-                        new GeoPoint(deed.getPos().getLat(), deed.getPos().getLon()));
-                overlay.addOverlayItem(builder.build(context));
-            }
-        });
+                        }
+                    }
+                }
+        );
     }
 
 

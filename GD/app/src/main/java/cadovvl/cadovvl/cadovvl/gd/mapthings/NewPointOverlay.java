@@ -2,9 +2,11 @@ package cadovvl.cadovvl.cadovvl.gd.mapthings;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.widget.Toast;
 
+import cadovvl.cadovvl.cadovvl.gd.CompanyPoster;
 import ru.yandex.yandexmapkit.MapController;
 import ru.yandex.yandexmapkit.map.GeoCode;
 import ru.yandex.yandexmapkit.map.GeoCodeListener;
@@ -31,6 +33,15 @@ public class NewPointOverlay extends Overlay /*implements GeoCodeListener*/
     public boolean onSingleTapUp( float x, float y )
     {
         GeoPoint point = getMapController().getGeoPoint( new ScreenPoint(x, y));
+
+
+        Intent intent = new Intent(mContext, CompanyPoster.class);
+        intent.putExtra("lat", Double.valueOf(point.getLat()).toString());
+        intent.putExtra("lon", Double.valueOf(point.getLon()).toString());
+        mContext.startActivityForResult(intent, 123);
+
+
+
         final String message = String.format("Let's create a good deed at [lat=%f and lon %f]", point.getLat(), point.getLon());
         mContext.runOnUiThread(new Runnable() {
             @Override

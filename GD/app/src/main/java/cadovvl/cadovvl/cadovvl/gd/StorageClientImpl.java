@@ -25,7 +25,7 @@ public class StorageClientImpl implements StorageClient {
 
     private final static String host = "194.87.94.65";
     private final static String port = "4000";
-    private final static String uri = "/posttest";
+    private final static String uri = "/deed";
     private final static String url = "http://" + host + ":" + port + uri;
 
     private ObjectMapper mapper = new ObjectMapper();
@@ -130,7 +130,7 @@ public class StorageClientImpl implements StorageClient {
     }
 
     @Override
-    public void get(final long id, final DeedConsumer consumer) {
+    public void get(final String id, final DeedConsumer consumer) {
         handler.post(new Runnable() {
             @Override
             public void run() {

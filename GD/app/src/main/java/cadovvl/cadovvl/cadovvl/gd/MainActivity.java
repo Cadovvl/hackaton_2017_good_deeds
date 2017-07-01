@@ -36,12 +36,6 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
 
-
-        Intent intent = new Intent(this, CompanyPoster.class);
-
-        startActivityForResult(intent, 123);
-
-
         initMap();
 
     }
@@ -68,6 +62,7 @@ public class MainActivity extends AppCompatActivity {
 
     private void loadCampaignsOverlay() {
         mCampaignsLayer = new Overlay(mMapController);
+        mOverlayManager.addOverlay(mCampaignsLayer);
         try {
             EventOverlayItem.placeItemsTest(mCampaignsLayer, this);
         } catch (Exception e) {
