@@ -32,17 +32,6 @@ public class MainActivity extends AppCompatActivity {
     private NewPointOverlay mNewPointLayer;
     private static final int PERMISSIONS_CODE = 1;
 
-
-    private void processException(Exception e) {
-        StringWriter writer = new StringWriter();
-        PrintWriter printWriter = new PrintWriter(writer);
-        e.printStackTrace(printWriter);
-        printWriter.flush();
-        TextView textView = (TextView) findViewById(R.id.OutputText);
-        textView.setText("An error occured: " + e.getMessage()
-                + "\n\nDetails: " + writer.toString());
-    }
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
