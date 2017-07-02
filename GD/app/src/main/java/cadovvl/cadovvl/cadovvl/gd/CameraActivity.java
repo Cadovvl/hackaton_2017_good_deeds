@@ -172,7 +172,28 @@ public class CameraActivity extends Activity {
 
                 Bitmap img = BitmapFactory.decodeByteArray(data[0],0,data[0].length);
 
-                img = Bitmap.createScaledBitmap(img, 400, 400, false);
+                if (img.getWidth() >= img.getHeight()){
+
+                    img = Bitmap.createBitmap(
+                            img,
+                            img.getWidth()/2 - img.getHeight()/2,
+                            0,
+                            img.getHeight(),
+                            img.getHeight()
+                    );
+
+                }else{
+
+                    img = Bitmap.createBitmap(
+                            img,
+                            0,
+                            img.getHeight()/2 - img.getWidth()/2,
+                            img.getWidth(),
+                            img.getWidth()
+                    );
+                }
+
+                img = Bitmap.createScaledBitmap(img, 600, 600, false);
                 Matrix matrix = new Matrix();
                 matrix.postRotate(90);
                 img = Bitmap.createBitmap(img , 0, 0, img .getWidth(), img .getHeight(), matrix, true);
