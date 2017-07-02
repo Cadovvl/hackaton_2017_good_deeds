@@ -1,32 +1,40 @@
 package cadovvl.cadovvl.cadovvl.gd;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
-import android.view.Window;
-import android.view.WindowManager;
 import android.widget.EditText;
 import android.widget.ImageView;
-
-import org.apache.commons.io.IOUtils;
-
-import java.io.BufferedInputStream;
-import java.io.BufferedOutputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.URL;
 
 import static org.apache.commons.io.IOUtils.copy;
 
 public class CompanyPoster extends AppCompatActivity {
 
     private StorageClient client = new StorageClientImpl();
-    
+    private String photoUrl = null;
+
+    private void updateImage() {
+        if(photoUrl == null)
+            return;
+        client.loadBitmap(photoUrl,
+                new BitmapConsumer() {
+                    @Override
+                    public void consume(final Bitmap img) {
+                        CompanyPoster.this.runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                ImageView iw = (ImageView) findViewById(R.id.posterView);
+                                iw.setImageBitmap(Bitmap.createScaledBitmap(img, iw.getWidth(), iw.getHeight(), false));
+                            }
+                        });
+                    }
+                });
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -37,25 +45,9 @@ public class CompanyPoster extends AppCompatActivity {
             ((EditText) findViewById(R.id.latField)).setText(lat);
             ((EditText) findViewById(R.id.lonField)).setText(lon);
 
-            try {
-                client.loadBitmap("http://www.freeiconspng.com/uploads/camera-icon-png--clipart-best-23.png",
-                        new BitmapConsumer() {
-                            @Override
-                            public void consume(final Bitmap img) {
-                                CompanyPoster.this.runOnUiThread(new Runnable() {
-                                    @Override
-                                    public void run() {
-                                        ImageView iw = (ImageView) findViewById(R.id.posterView);
-                                        iw.setImageBitmap(Bitmap.createScaledBitmap(img, iw.getWidth(), iw.getHeight(), false));
-                                    }
-                                });
-                            }
-                        });
-            } catch (Exception e) {
-                Log.e("Lol", e.getMessage());
-            }
-
             final CompanyPoster poster = this;
+
+            updateImage();
 
             View button = findViewById(R.id.newCompanySender);
             button.setOnClickListener(new View.OnClickListener() {
@@ -71,7 +63,8 @@ public class CompanyPoster extends AppCompatActivity {
                                         .setPos(new Pos()
                                                 .setLat(latF.isEmpty() ? 0.0 : Double.parseDouble(latF))
                                                 .setLon(lonF.isEmpty() ? 0.0 : Double.parseDouble(lonF))
-                                        ),
+                                        )
+                                        .setPhoto(photoUrl),
                                 new ResultConsumer() {
                                     @Override
                                     public void consume(String res) {
@@ -91,7 +84,7 @@ public class CompanyPoster extends AppCompatActivity {
                 @Override
                 public void onClick(View view) {
                     Intent intent = new Intent(getApplicationContext(), CameraActivity.class);
-                    startActivity(intent);
+                    startActivityForResult(intent, 123);
                 }
             });
 
@@ -102,5 +95,14 @@ public class CompanyPoster extends AppCompatActivity {
             this.finish();
         }
 
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == 123 && resultCode == Activity.RESULT_OK) {
+            photoUrl = data.getStringExtra("image_url");
+            updateImage();
+        }
     }
 }

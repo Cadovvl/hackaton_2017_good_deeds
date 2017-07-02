@@ -18,6 +18,24 @@ public class ModifeDeed extends AppCompatActivity {
 
     StorageClient storage = new StorageClientImpl();
 
+    private void updateImage(final String photoUrl) {
+        if(photoUrl == null)
+            return;
+        storage.loadBitmap(photoUrl,
+                new BitmapConsumer() {
+                    @Override
+                    public void consume(final Bitmap img) {
+                        ModifeDeed.this.runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                ImageView iw = (ImageView) findViewById(R.id.modifyView);
+                                iw.setImageBitmap(Bitmap.createScaledBitmap(img, iw.getWidth(), iw.getHeight(), false));
+                            }
+                        });
+                    }
+                });
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -28,7 +46,7 @@ public class ModifeDeed extends AppCompatActivity {
             final EditText description = (EditText) findViewById(R.id.descriptionField);
 
 
-            final String id = "5957f348da7429b9b65ec32d";
+            final String id = "59589e0eb02f82e94ffefd2d";
 
             final Deed d = new Deed();
 
@@ -52,6 +70,7 @@ public class ModifeDeed extends AppCompatActivity {
                                     spinner.setSelection(deed.getStatus().ordinal());
                                     name.setText(deed.getName());
                                     description.setText(deed.getDescrition());
+                                    updateImage(deed.getPhoto());
                                 }
                             }
                     );
@@ -60,23 +79,7 @@ public class ModifeDeed extends AppCompatActivity {
 
 
             if (d.getPhoto() != null) {
-                try {
-                    storage.loadBitmap(d.getPhoto(),
-                            new BitmapConsumer() {
-                                @Override
-                                public void consume(final Bitmap img) {
-                                    ModifeDeed.this.runOnUiThread(new Runnable() {
-                                        @Override
-                                        public void run() {
-                                            ImageView iw = (ImageView) findViewById(R.id.modifyView);
-                                            iw.setImageBitmap(Bitmap.createScaledBitmap(img, iw.getWidth(), iw.getHeight(), false));
-                                        }
-                                    });
-                                }
-                            });
-                } catch (Exception e) {
-                    Log.e("Lol", e.getMessage());
-                }
+                updateImage(d.getPhoto());
             }
 
             View button = findViewById(R.id.modifyCompanyButton);

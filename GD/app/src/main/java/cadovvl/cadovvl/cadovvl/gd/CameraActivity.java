@@ -35,10 +35,6 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.Map;
 
-/**
- * Created by ivdok on 01.07.17.
- */
-
 public class CameraActivity extends Activity {
     public static String PACKAGE_NAME;
     private static final String TAG = "CameraActivity";
@@ -145,17 +141,24 @@ public class CameraActivity extends Activity {
     PictureCallback jpegCallback = new PictureCallback() {
         public void onPictureTaken(byte[] data, Camera camera) {
 
-            new SaveImageTask().execute(data);
-            resetCam();
+            try {
+                String url = new SaveImageTask().execute(data).get();
+                Intent resultIntent = new Intent();
+                resultIntent.putExtra("image_url", url);
+                setResult(Activity.RESULT_OK, resultIntent);
+            } catch (Exception e) {
+                Log.e("Lol", e.getMessage());
+            }
+            CameraActivity.this.finish();
         }
     };
 
-    private class SaveImageTask extends AsyncTask<byte[], Void, Void> {
+    private class SaveImageTask extends AsyncTask<byte[], Void, String> {
 
         @Override
-        protected Void doInBackground(byte[]... data) {
+        protected String doInBackground(byte[]... data) {
             FileOutputStream outStream = null;
-
+            String res = null;
             // Write to SD Card
             try {
                 File sdCard = Environment.getExternalStorageDirectory();
@@ -166,58 +169,45 @@ public class CameraActivity extends Activity {
                 File outFile = new File(dir, fileName);
 
                 outStream = new FileOutputStream(outFile);
-                outStream.write(data[0]);
+
+                Bitmap img = BitmapFactory.decodeByteArray(data[0],0,data[0].length);
+
+                img = Bitmap.createScaledBitmap(img, 400, 400, false);
+                Matrix matrix = new Matrix();
+                matrix.postRotate(90);
+                img = Bitmap.createBitmap(img , 0, 0, img .getWidth(), img .getHeight(), matrix, true);
+
+                img.compress(Bitmap.CompressFormat.JPEG, 70, outStream);
+
                 outStream.flush();
                 outStream.close();
 
                 Log.d(TAG, "onPictureTaken - wrote bytes: " + data.length + " to " + outFile.getAbsolutePath());
-                //Rotation fix
-                String photopath = outFile.getPath().toString();
-                Bitmap bmp = BitmapFactory.decodeFile(photopath);
 
-                Matrix matrix = new Matrix();
-                matrix.postRotate(90);
-                bmp = Bitmap.createBitmap(bmp, 0, 0, bmp.getWidth(), bmp.getHeight(), matrix, true);
-
-                FileOutputStream fOut;
-                try {
-                    fOut = new FileOutputStream(outFile);
-                    bmp.compress(Bitmap.CompressFormat.JPEG, 85, fOut);
-                    fOut.flush();
-                    fOut.close();
-
-                } catch (FileNotFoundException e1) {
-                    // TODO Auto-generated catch block
-                    e1.printStackTrace();
-                } catch (IOException e) {
-                    // TODO Auto-generated catch block
-                    e.printStackTrace();
-                }
-                //rotation fix end
-                refreshGallery(outFile);
-                uploadToCloudiono(outFile);
+                res = uploadToCloudiono(outFile);
+                //refreshGallery(outFile);
             } catch (FileNotFoundException e) {
                 e.printStackTrace();
             } catch (IOException e) {
                 e.printStackTrace();
-            } finally {
             }
-            return null;
+            return res;
         }
 
     }
-    public static void uploadToCloudiono(File outFile) {
+    public static String uploadToCloudiono(File outFile) {
+        String res = null;
         try {
             FileInputStream fileInputStream = new FileInputStream(outFile);
             Cloudinary cloudinary = new Cloudinary("cloudinary://813966794176628:b6GUT3y0n8VQkfnTDMFx9O2hclA@mcvspace");
             Map UploadResult = cloudinary.uploader().upload(fileInputStream, ObjectUtils.emptyMap());
-            String ul = (String)UploadResult.get("url");
+            res = (String)UploadResult.get("url");
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
-        } finally {
         }
+        return res;
     }
     public static void setCameraDisplayOrientation(Activity activity,
                                                    int cameraId, android.hardware.Camera camera) {
