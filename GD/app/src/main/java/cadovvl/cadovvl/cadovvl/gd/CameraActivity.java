@@ -30,6 +30,8 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.Map;
+
 /**
  * Created by ivdok on 01.07.17.
  */
@@ -182,7 +184,7 @@ public class CameraActivity extends Activity {
         try {
         FileInputStream fileInputStream = new FileInputStream(outFile);
         Cloudinary cloudinary = new Cloudinary("cloudinary://813966794176628:b6GUT3y0n8VQkfnTDMFx9O2hclA@mcvspace");
-        cloudinary.uploader().upload(fileInputStream, ObjectUtils.emptyMap());
+        Map UploadResult = cloudinary.uploader().upload(fileInputStream, ObjectUtils.emptyMap());
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         } catch (IOException e) {
