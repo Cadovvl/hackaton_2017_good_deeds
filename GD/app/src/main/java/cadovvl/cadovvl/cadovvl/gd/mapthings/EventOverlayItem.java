@@ -31,8 +31,18 @@ public class EventOverlayItem extends OverlayItem {
 
     public enum Color {Red, Blue, Yellow, Green};
 
+    private Object mTag;
+
     private EventOverlayItem(GeoPoint geoPoint, Drawable drawable) {
         super(geoPoint, drawable);
+    }
+
+    private void setTag(Object tag) {
+        mTag = tag;
+    }
+
+    public Object getTag() {
+        return mTag;
     }
 
     public static class Builder {
@@ -40,6 +50,7 @@ public class EventOverlayItem extends OverlayItem {
         private Color mColor;
         private OnBalloonListener mListener;
         private String mText;
+        private Object mTag;
 
         public Builder setLocation(GeoPoint point) {
             mPoint = point;
@@ -61,11 +72,18 @@ public class EventOverlayItem extends OverlayItem {
             return this;
         }
 
+        public Builder setTag(Object tag) {
+            mTag = tag;
+            return this;
+        }
+
         public OverlayItem build(Context context) {
             Drawable markeredPin = getMarkeredPin(context.getResources(), mColor);
-            OverlayItem overlayItem = new EventOverlayItem(mPoint, markeredPin);
+            EventOverlayItem overlayItem = new EventOverlayItem(mPoint, markeredPin);
+            if (mTag != null) {
+                overlayItem.setTag(mTag);
+            }
             BalloonItem balloon = new BalloonItem(context, overlayItem.getGeoPoint());
-
             if (mText != null) {
                 balloon.setText(mText);
             }

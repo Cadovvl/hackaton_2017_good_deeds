@@ -24,7 +24,7 @@ public class Deed {
         }
     }
 
-    private final static String ID_KEY = "id";
+    public final static String ID_KEY = "id";
     private final static String NAME_KEY = "name";
     private final static String DESCRIPTION_KEY = "description";
     private final static String CREATED_TS_KEY = "created_at";

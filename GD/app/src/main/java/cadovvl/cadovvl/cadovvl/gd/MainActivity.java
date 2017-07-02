@@ -9,12 +9,14 @@ import android.widget.Toast;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import cadovvl.cadovvl.cadovvl.gd.mapthings.BasicBalloonListener;
 import cadovvl.cadovvl.cadovvl.gd.mapthings.EventOverlayItem;
 import cadovvl.cadovvl.cadovvl.gd.mapthings.NewPointOverlay;
 import ru.yandex.yandexmapkit.MapController;
 import ru.yandex.yandexmapkit.MapView;
 import ru.yandex.yandexmapkit.OverlayManager;
 import ru.yandex.yandexmapkit.overlay.Overlay;
+import ru.yandex.yandexmapkit.overlay.OverlayItem;
 import ru.yandex.yandexmapkit.overlay.balloon.BalloonItem;
 import ru.yandex.yandexmapkit.overlay.balloon.OnBalloonListener;
 import ru.yandex.yandexmapkit.utils.GeoPoint;
@@ -36,6 +38,19 @@ public class MainActivity extends AppCompatActivity {
         Toast.makeText(this, message, Toast.LENGTH_LONG).show();
     }
 
+    private OnBalloonListener _balloonClickListener = new BasicBalloonListener() {
+        @Override
+        public void onBalloonViewClick(BalloonItem balloonItem, View view) {
+            EventOverlayItem item = (EventOverlayItem) balloonItem.getOverlayItem();
+
+            Intent intent = new Intent().setClass(MainActivity.this, ModifeDeed.class);
+            if (item.getTag() != null && item.getTag() instanceof Deed){
+                Deed modifiableDeed = (Deed) item.getTag();
+                intent.putExtra(Deed.ID_KEY, modifiableDeed.getId());
+            }
+            startActivity(intent);
+        }
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -107,7 +122,9 @@ public class MainActivity extends AppCompatActivity {
                         for (final Deed d: deeds.values()) {
                             builder.setColor(getColorByStatus(d.getStatus()))
                                     .setLocation( new GeoPoint(d.getPos().getLat(), d.getPos().getLon()) )
-                            .setText(String.format("DEED: %s", d.getName() != null ? d.getName(): ""));
+                                    .setText(String.format("DEED: %s", d.getName() != null ? d.getName(): ""))
+                                    .setOnBalloonListener(_balloonClickListener)
+                                    .setTag(d);
                             overlay.addOverlayItem(builder.build(MainActivity.this));
 
                         }
