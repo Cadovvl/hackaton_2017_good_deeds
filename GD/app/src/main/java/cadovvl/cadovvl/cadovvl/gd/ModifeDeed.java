@@ -46,7 +46,7 @@ public class ModifeDeed extends AppCompatActivity {
             final EditText description = (EditText) findViewById(R.id.descriptionField);
 
 
-            final String id = "59589e0eb02f82e94ffefd2d";
+            final String id = getIntent().getStringExtra("id");
 
             final Deed d = new Deed();
 

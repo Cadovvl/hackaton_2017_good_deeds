@@ -2,6 +2,7 @@ package cadovvl.cadovvl.cadovvl.gd;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.os.DropBoxManager;
 import android.os.Handler;
 import android.os.HandlerThread;
 import android.util.Log;
@@ -20,6 +21,7 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 
 import cz.msebera.android.httpclient.HttpResponse;
 import cz.msebera.android.httpclient.client.HttpClient;
@@ -160,7 +162,7 @@ public class StorageClientImpl implements StorageClient {
                     }
 
                     consumer.consume(
-                            mapper.readValue(response.getEntity().getContent(), Deed.class)
+                            mapper.readValue(response.getEntity().getContent(), Deed.class).setId(id)
                     );
                 } catch (Exception e) {
                     final String message = String.format("Something really bad happens: %s", e.getMessage());
@@ -203,8 +205,12 @@ public class StorageClientImpl implements StorageClient {
                         throw new RuntimeException("Das is ERROR!!!\n Response code: " + response.getStatusLine());
                     }
 
+                    Deeds res = mapper.readValue(response.getEntity().getContent(), Deeds.class);
+                    for (Map.Entry<String, Deed> e: res.entrySet()) {
+                        e.setValue(e.getValue().setId(e.getKey()));
+                    }
                     consumer.consume(
-                            mapper.readValue(response.getEntity().getContent(), Deeds.class)
+                            res
                     );
                 } catch (Exception e) {
                     final String message = String.format("Something really bad happens: %s", e.getMessage());
