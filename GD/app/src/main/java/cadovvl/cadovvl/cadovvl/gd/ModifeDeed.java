@@ -1,5 +1,6 @@
 package cadovvl.cadovvl.cadovvl.gd;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.support.v7.app.AppCompatActivity;
@@ -17,6 +18,7 @@ import java.util.Arrays;
 public class ModifeDeed extends AppCompatActivity {
 
     StorageClient storage = new StorageClientImpl();
+    final Deed d = new Deed();
 
     private void updateImage(final String photoUrl) {
         if(photoUrl == null)
@@ -47,8 +49,6 @@ public class ModifeDeed extends AppCompatActivity {
 
 
             final String id = getIntent().getStringExtra("id");
-
-            final Deed d = new Deed();
 
             final ModifeDeed modifier = this;
 
@@ -111,9 +111,11 @@ public class ModifeDeed extends AppCompatActivity {
                 @Override
                 public void onClick(View view) {
                     Intent intent = new Intent(getApplicationContext(), CameraActivity.class);
-                    startActivity(intent);
+                    startActivityForResult(intent, 124);
                 }
             });
+
+
 
         } catch (Exception e) {
             final String message = String.format("Something really bad happens: %s", e.getMessage());
@@ -122,4 +124,15 @@ public class ModifeDeed extends AppCompatActivity {
         }
 
     }
+
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == 124 && resultCode == Activity.RESULT_OK) {
+            d.setPhoto(data.getStringExtra("image_url"));
+            updateImage(d.getPhoto());
+        }
+    }
 }
+
