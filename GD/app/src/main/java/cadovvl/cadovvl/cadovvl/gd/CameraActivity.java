@@ -3,6 +3,9 @@ package cadovvl.cadovvl.cadovvl.gd;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Matrix;
 import android.hardware.Camera;
 import android.hardware.Camera.PictureCallback;
 import android.hardware.Camera.ShutterCallback;
@@ -68,25 +71,25 @@ public class CameraActivity extends Activity {
             }
         });
 
-        		buttonClick = (ImageButton) findViewById(R.id.imgCapture);
+        buttonClick = (ImageButton) findViewById(R.id.imgCapture);
 
-        		buttonClick.setOnClickListener(new OnClickListener() {
-        			public void onClick(View v) {
-        				camera.takePicture(shutterCallback, rawCallback, jpegCallback);
-        			}
-        		});
+        buttonClick.setOnClickListener(new OnClickListener() {
+            public void onClick(View v) {
+                camera.takePicture(shutterCallback, rawCallback, jpegCallback);
+            }
+        });
 
-        		buttonClick.setOnLongClickListener(new OnLongClickListener(){
-        			@Override
-        			public boolean onLongClick(View arg0) {
-        				camera.autoFocus(new Camera.AutoFocusCallback(){
-        					@Override
-        					public void onAutoFocus(boolean arg0, Camera arg1) {
-        					}
-        				});
-        				return true;
-        			}
-        		});
+        buttonClick.setOnLongClickListener(new OnLongClickListener(){
+            @Override
+            public boolean onLongClick(View arg0) {
+                camera.autoFocus(new Camera.AutoFocusCallback(){
+                    @Override
+                    public void onAutoFocus(boolean arg0, Camera arg1) {
+                    }
+                });
+                return true;
+            }
+        });
     }
 
     @Override
@@ -168,8 +171,31 @@ public class CameraActivity extends Activity {
                 outStream.close();
 
                 Log.d(TAG, "onPictureTaken - wrote bytes: " + data.length + " to " + outFile.getAbsolutePath());
+                //Rotation fix
+                String photopath = outFile.getPath().toString();
+                Bitmap bmp = BitmapFactory.decodeFile(photopath);
+
+                Matrix matrix = new Matrix();
+                matrix.postRotate(90);
+                bmp = Bitmap.createBitmap(bmp, 0, 0, bmp.getWidth(), bmp.getHeight(), matrix, true);
+
+                FileOutputStream fOut;
+                try {
+                    fOut = new FileOutputStream(outFile);
+                    bmp.compress(Bitmap.CompressFormat.JPEG, 85, fOut);
+                    fOut.flush();
+                    fOut.close();
+
+                } catch (FileNotFoundException e1) {
+                    // TODO Auto-generated catch block
+                    e1.printStackTrace();
+                } catch (IOException e) {
+                    // TODO Auto-generated catch block
+                    e.printStackTrace();
+                }
+                //rotation fix end
+                refreshGallery(outFile);
                 uploadToCloudiono(outFile);
-                //refreshGallery(outFile);
             } catch (FileNotFoundException e) {
                 e.printStackTrace();
             } catch (IOException e) {
@@ -182,10 +208,10 @@ public class CameraActivity extends Activity {
     }
     public static void uploadToCloudiono(File outFile) {
         try {
-        FileInputStream fileInputStream = new FileInputStream(outFile);
-        Cloudinary cloudinary = new Cloudinary("cloudinary://813966794176628:b6GUT3y0n8VQkfnTDMFx9O2hclA@mcvspace");
-        Map UploadResult = cloudinary.uploader().upload(fileInputStream, ObjectUtils.emptyMap());
-        String ul = (String)UploadResult.get("url");
+            FileInputStream fileInputStream = new FileInputStream(outFile);
+            Cloudinary cloudinary = new Cloudinary("cloudinary://813966794176628:b6GUT3y0n8VQkfnTDMFx9O2hclA@mcvspace");
+            Map UploadResult = cloudinary.uploader().upload(fileInputStream, ObjectUtils.emptyMap());
+            String ul = (String)UploadResult.get("url");
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         } catch (IOException e) {
