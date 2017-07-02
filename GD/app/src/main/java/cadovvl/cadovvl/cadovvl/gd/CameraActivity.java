@@ -185,6 +185,7 @@ public class CameraActivity extends Activity {
         FileInputStream fileInputStream = new FileInputStream(outFile);
         Cloudinary cloudinary = new Cloudinary("cloudinary://813966794176628:b6GUT3y0n8VQkfnTDMFx9O2hclA@mcvspace");
         Map UploadResult = cloudinary.uploader().upload(fileInputStream, ObjectUtils.emptyMap());
+        String ul = (String)UploadResult.get("url");
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         } catch (IOException e) {
