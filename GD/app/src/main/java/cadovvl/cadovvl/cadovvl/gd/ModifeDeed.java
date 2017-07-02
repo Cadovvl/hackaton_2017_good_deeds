@@ -1,6 +1,7 @@
 package cadovvl.cadovvl.cadovvl.gd;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -8,6 +9,7 @@ import android.view.View;
 import android.widget.Adapter;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.Spinner;
 
 import java.util.Arrays;
@@ -57,6 +59,25 @@ public class ModifeDeed extends AppCompatActivity {
             });
 
 
+            if (d.getPhoto() != null) {
+                try {
+                    storage.loadBitmap(d.getPhoto(),
+                            new BitmapConsumer() {
+                                @Override
+                                public void consume(final Bitmap img) {
+                                    ModifeDeed.this.runOnUiThread(new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            ImageView iw = (ImageView) findViewById(R.id.modifyView);
+                                            iw.setImageBitmap(Bitmap.createScaledBitmap(img, iw.getWidth(), iw.getHeight(), false));
+                                        }
+                                    });
+                                }
+                            });
+                } catch (Exception e) {
+                    Log.e("Lol", e.getMessage());
+                }
+            }
 
             View button = findViewById(R.id.modifyCompanyButton);
             button.setOnClickListener(new View.OnClickListener() {
@@ -82,7 +103,7 @@ public class ModifeDeed extends AppCompatActivity {
             });
 
 
-            View cameraView = findViewById(R.id.shot);
+            View cameraView = findViewById(R.id.modifyView);
             cameraView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {

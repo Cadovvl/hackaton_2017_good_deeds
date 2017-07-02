@@ -1,5 +1,7 @@
 package cadovvl.cadovvl.cadovvl.gd;
 
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Handler;
 import android.os.HandlerThread;
 import android.util.Log;
@@ -9,6 +11,12 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
 
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -22,12 +30,15 @@ import cz.msebera.android.httpclient.client.utils.URIBuilder;
 import cz.msebera.android.httpclient.entity.ByteArrayEntity;
 import cz.msebera.android.httpclient.impl.client.HttpClientBuilder;
 
+import static org.apache.commons.io.IOUtils.copy;
+
 public class StorageClientImpl implements StorageClient {
 
     private final static String host = "194.87.94.65";
     private final static String port = "4000";
     private final static String uri = "/deed";
     private final static String url = "http://" + host + ":" + port + uri;
+    private static final int IO_BUFFER_SIZE = 4000;
 
     private ObjectMapper mapper = new ObjectMapper();
 
@@ -199,6 +210,40 @@ public class StorageClientImpl implements StorageClient {
                     final String message = String.format("Something really bad happens: %s", e.getMessage());
                     Log.e("Lal", message);
                 }
+            }
+        });
+    }
+
+    @Override
+    public void loadBitmap(final String url, final BitmapConsumer consumer) {
+        handler.post(new Runnable() {
+            @Override
+            public void run() {
+                Bitmap bitmap = null;
+                InputStream in = null;
+                BufferedOutputStream out = null;
+
+                try {
+                    in = new BufferedInputStream(new URL(url).openStream(), IO_BUFFER_SIZE);
+
+                    final ByteArrayOutputStream dataStream = new ByteArrayOutputStream();
+                    out = new BufferedOutputStream(dataStream, IO_BUFFER_SIZE);
+                    copy(in, out);
+                    out.flush();
+
+                    final byte[] data = dataStream.toByteArray();
+                    BitmapFactory.Options options = new BitmapFactory.Options();
+                    //options.inSampleSize = 1;
+
+                    bitmap = BitmapFactory.decodeByteArray(data, 0, data.length, options);
+                } catch (IOException e) {
+                    Log.e("TAG", "Could not load Bitmap from: " + url);
+                } finally {
+                    IOUtils.closeQuietly(in);
+                    IOUtils.closeQuietly(out);
+                }
+
+                consumer.consume(bitmap);
             }
         });
     }
