@@ -4,6 +4,8 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.View;
+import android.widget.Toast;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -13,6 +15,8 @@ import ru.yandex.yandexmapkit.MapController;
 import ru.yandex.yandexmapkit.MapView;
 import ru.yandex.yandexmapkit.OverlayManager;
 import ru.yandex.yandexmapkit.overlay.Overlay;
+import ru.yandex.yandexmapkit.overlay.balloon.BalloonItem;
+import ru.yandex.yandexmapkit.overlay.balloon.OnBalloonListener;
 import ru.yandex.yandexmapkit.utils.GeoPoint;
 
 public class MainActivity extends AppCompatActivity {
@@ -27,11 +31,16 @@ public class MainActivity extends AppCompatActivity {
     private Overlay mCampaignsLayer;
     private static final int PERMISSIONS_CODE = 1;
 
+    private void processException(Exception e) {
+        final String message = String.format("Something really bad happens: %s", e.getMessage());
+        Toast.makeText(this, message, Toast.LENGTH_LONG).show();
+    }
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
 
         initMap();
 
@@ -64,8 +73,23 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onResume() {
-        loadCampaignsOverlay(mCampaignsLayer);
-        super.onResume();
+        try {
+            loadCampaignsOverlay(mCampaignsLayer);
+        } catch (Exception e) {
+            processException(e);
+        }
+            super.onResume();
+    }
+
+    private final EventOverlayItem.Color getColorByStatus(final Deed.Status status) {
+        if (status.equals(Deed.Status.created)) {
+            return EventOverlayItem.Color.Red;
+        } else if (status.equals(Deed.Status.processing)) {
+            return EventOverlayItem.Color.Blue;
+        } else if (status.equals(Deed.Status.done)) {
+            return EventOverlayItem.Color.Green;
+        }
+        return EventOverlayItem.Color.Yellow;
     }
 
     private void loadCampaignsOverlay(final Overlay overlay) {
@@ -82,15 +106,14 @@ public class MainActivity extends AppCompatActivity {
                     @Override
                     public void consume(Deeds deeds) {
                         for (final Deed d: deeds.values()) {
-                            builder.setColor(EventOverlayItem.Color.Blue)
-                                    .setLocation( new GeoPoint(d.getPos().getLat(), d.getPos().getLon()) );
+                            builder.setColor(getColorByStatus(d.getStatus()))
+                                    .setLocation( new GeoPoint(d.getPos().getLat(), d.getPos().getLon()));
                             overlay.addOverlayItem(builder.build(MainActivity.this));
 
                         }
                     }
                 }
         );
-
     }
 
     @Override

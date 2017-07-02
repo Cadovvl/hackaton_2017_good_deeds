@@ -4,13 +4,24 @@ package cadovvl.cadovvl.cadovvl.gd;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class Deed {
 
     public enum Status {
         created,
-        done,
-        closed
+        processing,
+        done;
+
+        public static List<String> names() {
+            List<String> res = new ArrayList<>();
+            for (final Status s: values()) {
+                res.add(s.toString());
+            }
+            return res;
+        }
     }
 
     private final static String ID_KEY = "id";

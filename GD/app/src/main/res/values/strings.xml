@@ -4,4 +4,10 @@
     <string name="action_settings">Settings</string>
     <string name="capture_button">Capture Image From Camera</string>
     <string name="desc">capture image place holder</string>
+
+    <string-array name="deed_statuses">
+        <item>created</item>
+        <item>processing</item>
+        <item>done</item>
+    </string-array>
 </resources>

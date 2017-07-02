@@ -2,6 +2,7 @@ package cadovvl.cadovvl.cadovvl.gd;
 
 import android.os.Handler;
 import android.os.HandlerThread;
+import android.util.Log;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -63,7 +64,8 @@ public class StorageClientImpl implements StorageClient {
                                          IOUtils.toString(response.getEntity().getContent())
                                  );
                              } catch (Exception e) {
-                                 throw new RuntimeException(e);
+                                 final String message = String.format("Something really bad happens: %s", e.getMessage());
+                                 Log.e("Lal", message);
                              }
                          }
                      }
@@ -76,7 +78,7 @@ public class StorageClientImpl implements StorageClient {
                          @Override
                          public void run() {
                              HttpClient client = HttpClientBuilder.create().build();
-                             HttpPut put = new HttpPut(url);
+                             HttpPut put = new HttpPut(url + "/" + deed.getId());
                              put.addHeader("Content-Type", "application/json");
 
                              try {
@@ -94,7 +96,8 @@ public class StorageClientImpl implements StorageClient {
                                          IOUtils.toString(response.getEntity().getContent())
                                  );
                              } catch (Exception e) {
-                                 throw new RuntimeException(e);
+                                 final String message = String.format("Something really bad happens: %s", e.getMessage());
+                                 Log.e("Lal", message);
                              }
                          }
                      }
@@ -109,7 +112,8 @@ public class StorageClientImpl implements StorageClient {
                 try {
                     callback.consume(mapper.readValue(res, Deed.class));
                 } catch (Exception e) {
-                    throw new RuntimeException(e);
+                    final String message = String.format("Something really bad happens: %s", e.getMessage());
+                    Log.e("Lal", message);
                 }
             }
         });
@@ -123,7 +127,8 @@ public class StorageClientImpl implements StorageClient {
                 try {
                     callback.consume(mapper.readValue(res, Deed.class));
                 } catch (Exception e) {
-                    throw new RuntimeException(e);
+                    final String message = String.format("Something really bad happens: %s", e.getMessage());
+                    Log.e("Lal", message);
                 }
             }
         });
@@ -147,7 +152,8 @@ public class StorageClientImpl implements StorageClient {
                             mapper.readValue(response.getEntity().getContent(), Deed.class)
                     );
                 } catch (Exception e) {
-                    throw new RuntimeException(e);
+                    final String message = String.format("Something really bad happens: %s", e.getMessage());
+                    Log.e("Lal", message);
                 }
             }
         });
@@ -190,10 +196,10 @@ public class StorageClientImpl implements StorageClient {
                             mapper.readValue(response.getEntity().getContent(), Deeds.class)
                     );
                 } catch (Exception e) {
-                    throw new RuntimeException(e);
+                    final String message = String.format("Something really bad happens: %s", e.getMessage());
+                    Log.e("Lal", message);
                 }
             }
         });
     }
-
 }

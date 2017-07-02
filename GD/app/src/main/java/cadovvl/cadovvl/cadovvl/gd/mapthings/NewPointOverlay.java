@@ -7,6 +7,7 @@ import android.support.annotation.NonNull;
 import android.widget.Toast;
 
 import cadovvl.cadovvl.cadovvl.gd.CompanyPoster;
+import cadovvl.cadovvl.cadovvl.gd.ModifeDeed;
 import ru.yandex.yandexmapkit.MapController;
 import ru.yandex.yandexmapkit.map.GeoCode;
 import ru.yandex.yandexmapkit.map.GeoCodeListener;
@@ -29,26 +30,35 @@ public class NewPointOverlay extends Overlay /*implements GeoCodeListener*/
         mContext = context;
     }
 
+
+
     @Override
     public boolean onSingleTapUp( float x, float y )
     {
-        GeoPoint point = getMapController().getGeoPoint( new ScreenPoint(x, y));
+        try {
+            GeoPoint point = getMapController().getGeoPoint(new ScreenPoint(x, y));
 
+            Intent intent = new Intent(mContext, CompanyPoster.class);
+            intent.putExtra("lat", Double.valueOf(point.getLat()).toString());
+            intent.putExtra("lon", Double.valueOf(point.getLon()).toString());
+            mContext.startActivityForResult(intent, 123);
 
-        Intent intent = new Intent(mContext, CompanyPoster.class);
-        intent.putExtra("lat", Double.valueOf(point.getLat()).toString());
-        intent.putExtra("lon", Double.valueOf(point.getLon()).toString());
-        mContext.startActivityForResult(intent, 123);
-
-
-
-        final String message = String.format("Let's create a good deed at [lat=%f and lon %f]", point.getLat(), point.getLon());
-        mContext.runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                Toast.makeText(mContext, message, Toast.LENGTH_LONG).show();
-            }
-        });
+            final String message = String.format("Let's create a good deed at [lat=%f and lon %f]", point.getLat(), point.getLon());
+            mContext.runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    Toast.makeText(mContext, message, Toast.LENGTH_LONG).show();
+                }
+            });
+        } catch (Exception e) {
+            final String message = String.format("Something really bad happens: %s", e.getMessage());
+            mContext.runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    Toast.makeText(mContext, message, Toast.LENGTH_LONG).show();
+                }
+            });
+        }
         ;
         /*getMapController().getDownloader().getGeoCode(
                 this,

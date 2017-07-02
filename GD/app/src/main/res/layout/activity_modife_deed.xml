@@ -59,44 +59,22 @@
 
         </TableRow>
 
-        <TableRow
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
-
+        <TableRow>
             <TextView
-                android:id="@+id/textView7"
+                android:id="@+id/textView9"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="lat:"
+                android:text="Состояние:"
                 android:textAlignment="textEnd"
-                android:textSize="24sp"
+                android:textSize="18sp"
                 android:textStyle="bold" />
 
-            <EditText
-                android:id="@+id/latField"
+            <Spinner
+                android:id="@+id/statusSpinner"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:ems="10"
-                android:inputType="numberDecimal" />
-
-            <TextView
-                android:id="@+id/textView8"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="lon:"
-                android:textAlignment="textEnd"
-                android:textSize="24sp"
-                android:textStyle="bold" />
-
-            <EditText
-                android:id="@+id/lonField"
-                style=""
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:ems="10"
-                android:inputType="numberDecimal" />
+                android:entries="@array/deed_statuses"/>
         </TableRow>
 
     </TableLayout>
@@ -112,7 +90,7 @@
         app:srcCompat="@drawable/photo_icon" />
 
     <Button
-        android:id="@+id/newCompanySender"
+        android:id="@+id/modifyCompanyButton"
         style="@android:style/Widget.Button.Inset"
         android:layout_width="match_parent"
         android:layout_height="70dp"
