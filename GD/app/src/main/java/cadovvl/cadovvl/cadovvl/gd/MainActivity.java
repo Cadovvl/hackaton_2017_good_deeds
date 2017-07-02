@@ -54,11 +54,10 @@ public class MainActivity extends AppCompatActivity {
         mOverlayManager = mMapController.getOverlayManager();
 
         mapView.showBuiltInScreenButtons(true);
-        // add listener
-        //mMapController.getOverlayManager().getMyLocation().addMyLocationListener(this);
 
-        initNewPointOverlay();
         initCampaignsOverlay();
+        initNewPointOverlay();
+
     }
 
     private void initNewPointOverlay() {
@@ -107,7 +106,8 @@ public class MainActivity extends AppCompatActivity {
                     public void consume(Deeds deeds) {
                         for (final Deed d: deeds.values()) {
                             builder.setColor(getColorByStatus(d.getStatus()))
-                                    .setLocation( new GeoPoint(d.getPos().getLat(), d.getPos().getLon()));
+                                    .setLocation( new GeoPoint(d.getPos().getLat(), d.getPos().getLon()) )
+                            .setText(String.format("DEED: %s", d.getName() != null ? d.getName(): ""));
                             overlay.addOverlayItem(builder.build(MainActivity.this));
 
                         }
